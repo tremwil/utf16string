@@ -160,8 +160,8 @@ pub struct WString<E: 'static + ByteOrder> {
 
 #[derive(Debug, Eq, PartialEq, Hash)]
 #[repr(transparent)]
-pub struct WStr<E: 'static + ByteOrder> {
-    _endian: PhantomData<&'static E>,
+pub struct WStr<E: ByteOrder> {
+    _endian: PhantomData<fn() -> E>,
     raw: [u8],
 }
 
@@ -170,9 +170,9 @@ pub struct WStr<E: 'static + ByteOrder> {
 /// The slice must contain valid UTF-16, otherwise this may panic or cause undefined
 /// behaviour.
 #[derive(Debug)]
-pub struct WStrChars<'a, E: 'static + ByteOrder> {
+pub struct WStrChars<'a, E: ByteOrder> {
     chunks: ChunksExact<'a, u8>,
-    _endian: PhantomData<&'static E>,
+    _endian: PhantomData<fn() -> E>,
 }
 
 /// Iterator yielding `(index, char)` tuples from a UTF-16 little-endian encoded byte slice.
@@ -180,7 +180,7 @@ pub struct WStrChars<'a, E: 'static + ByteOrder> {
 /// The slice must contain valid UTF-16, otherwise this may panic or cause undefined
 /// behaviour.
 #[derive(Debug)]
-pub struct WStrCharIndices<'a, E: 'static + ByteOrder> {
+pub struct WStrCharIndices<'a, E: ByteOrder> {
     chars: WStrChars<'a, E>,
     index: usize,
 }
